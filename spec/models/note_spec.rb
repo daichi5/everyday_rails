@@ -1,24 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Note, type: :model do
-  before do
-    @user = User.create(
-      first_name: "Joe",
-      last_name: "Tester",
-      email: "joetester@example.com",
-      password: "assdfgghjhkl-dfgd"
-    )
-
-    @project = @user.projects.create(
-      name: "Test Project"
-    )
-  end
-
+  let(:user) { FactoryBot.create(:user) }  
+  let(:project) { FactoryBot.create(:project, owner: user) }
+  
   it "is valid with a user, project, and message" do
     note = Note.new(
       message: "This is a sample note.",
-      user: @user,
-      project: @project,
+      user: user,
+      project: project,
     )
     expect(note).to be_valid
   end
@@ -31,19 +21,19 @@ RSpec.describe Note, type: :model do
 
   describe "search message for a term" do
     before do
-      @note1 = @project.notes.create(
+      @note1 = project.notes.create(
         message: "This is the first note.",
-        user: @user,
+        user: user,
       )
 
-      @note2 = @project.notes.create(
+      @note2 = project.notes.create(
         message: "This is the second note.",
-        user: @user,
+        user: user,
       )
 
-      @note3 = @project.notes.create(
+      @note3 = project.notes.create(
         message: "First, preheat that oven.",
-        user: @user,
+        user: user,
       )
     end
 
